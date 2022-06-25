@@ -3,7 +3,8 @@ import datetime
 import messages
 import utils
 import numpy as np
-from . import Times
+from DataBase import DBHandler
+from . import TimeSelector
 
 
 def create_callback_data(action,hour,minute):
@@ -11,21 +12,28 @@ def create_callback_data(action,hour,minute):
     return messages.TIMES_CALLBACK + ";" + ";".join([action, str(hour), str(minute)])
 
 
-def create_times(point = "Start"):
+def create_times(selected = None):
     keyboard = []
     #Проверка условия выбора начального времени и конечного
-    times_arr = Times.times
-    if point == "Start":
-        times_arr = times_arr[:-1]
+    times = DBHandler.get_dataset("times")
+    times = TimeSelector.time_selector_changer(times, selected)
+    if selected == None:
+        strSelect = "Start"
     else:
-        times_arr = times_arr[1:]
+        strSelect = "End"
     #Times selection
-    times_arr = np.array(times_arr).reshape(9, 4)
-    for line in times_arr:
+    rowcol = 0
+    for j in range(int(np.ceil(len(times)/4))):
         row = []
-        for time in line:
-            (hour,minute) = utils.separate_time_data(time)
-            row.append(InlineKeyboardButton(time,callback_data=create_callback_data(f"{point}TIME",hour,minute)))
+        for i in range(4):
+            pos = i + rowcol * 4
+            if pos >= len(times):
+                row.append(
+                    InlineKeyboardButton(" ", callback_data=create_callback_data("IGNORE", 0, 0)))
+            else:
+                (hour,minute) = utils.separate_time_data(times[pos])
+                row.append(InlineKeyboardButton(times[pos],callback_data=create_callback_data(strSelect,hour,minute)))
+        rowcol = rowcol + 1
         keyboard.append(row)
 
     return InlineKeyboardMarkup(keyboard)
@@ -38,12 +46,18 @@ def process_times_selection(update,context):
     (_,action,hour,minute) = utils.separate_callback_data(query.data)
     if action == "IGNORE":
         context.bot.answer_callback_query(callback_query_id= query.id)
-    elif action.find("TIME"):
+    elif action == "Start":
         context.bot.edit_message_text(text=query.message.text,
             chat_id=query.message.chat_id,
             message_id=query.message.message_id
             )
-        ret_data = True,action,datetime.time(int(hour),int(minute))
+        ret_data = True,datetime.time(int(hour),int(minute))
+    elif action == "End":
+        context.bot.edit_message_text(text=query.message.text,
+            chat_id=query.message.chat_id,
+            message_id=query.message.message_id
+            )
+        ret_data = False,datetime.time(int(hour),int(minute))
     else:
         context.bot.answer_callback_query(callback_query_id= query.id,text="Something went wrong!")
         # UNKNOWN
