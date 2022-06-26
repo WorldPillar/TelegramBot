@@ -106,9 +106,6 @@ else:
     dp.add_handler(CommandHandler("book", book_handler))
     dp.add_handler(CommandHandler("allbooks", all_books_handler))
     dp.add_handler(CommandHandler("userbooks", user_books_handler))
-    # dp.add_handler(CommandHandler("calendar", calendar_handler))
-    # dp.add_handler(CommandHandler("room", room_handler))
-    # dp.add_handler(CommandHandler("times", times_handler))
     dp.add_handler(CallbackQueryHandler(inline_handler))
 
     updater.start_polling()

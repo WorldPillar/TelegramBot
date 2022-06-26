@@ -1,25 +1,14 @@
 import psycopg2
 from psycopg2 import Error
+from db_connection import DBConnector
+connection = DBConnector.connect()
 
 
 def get_rooms():
-    try:
-        connection = psycopg2.connect(user="admin",
-                                      password="admin",
-                                      host="127.0.0.1",
-                                      port="5432",
-                                      database="TelegramBot")
-        cursor = connection.cursor()
-        query = "SELECT * FROM rooms"
-        cursor.execute(query)
-        return cursor.fetchall()
-    except (Exception, Error) as error:
-        print("Ошибка при работе с PostgreSQL", error)
-    finally:
-        if connection:
-            cursor.close()
-            connection.close()
-            print("Соединение с PostgreSQL закрыто")
+    cursor = connection.cursor()
+    query = "SELECT * FROM rooms"
+    cursor.execute(query)
+    return cursor.fetchall()
 
 
 def get_unavailable():
@@ -36,31 +25,30 @@ def get_booking_time():
     return cursor.fetchall()
 
 
-def get_booking(id_room, day):
+def get_booking():
     cursor = connection.cursor()
-    query = "SELECT * FROM booking WHERE " \
-            "id_room = " + id_room + " " \
-            "day = day '" + day + "' "
+    query = f"SELECT * FROM booking"
     cursor.execute(query)
     return cursor.fetchall()
 
 
-def get_booking(id_room, id_emp, day):
+def get_booking_by_room(id_room, day):
     cursor = connection.cursor()
-    if id_room == None:
-        idr = '*'
-    else:
-        idr = str(id_room)
-    if id_emp == None:
-        ide = '*'
-    else:
-        ide = str(id_emp)
-    query = "SELECT * FROM booking WHERE " \
-            "id_emp = " + ide + ", "\
-            "id_room = " + idr + ", " \
-            "day = day '" + day + "' "
+    query = f"SELECT * FROM booking WHERE " \
+            f"id_room = {id_room}, " \
+            f"day = {day}"
     cursor.execute(query)
     return cursor.fetchall()
+
+
+def get_booking_by_employee(id_emp, day):
+    cursor = connection.cursor()
+    query = f"SELECT * FROM booking WHERE " \
+            f"id_emp = {id_emp}, " \
+            f"day = {day}"
+    cursor.execute(query)
+    return cursor.fetchall()
+
 
 
 def add_booking(id_emp, id_room, day, id_start, id_end):
