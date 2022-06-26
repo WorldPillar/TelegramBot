@@ -12,7 +12,7 @@ def creat_booked_list(chat_id = None):
         #Выводим брони этого человека
         books = []
     #Books selection
-    strbooks = "РинатЛох"
+    strbooks = "Риyfn"
     for book in books:
         strbooks = book + "\n"
 
