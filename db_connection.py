@@ -14,4 +14,5 @@ class DBConnector:
         return self.connection
 
     def __exit__(self,*args,**kwargs):
+        self.connection.commit()
         self.connection.close()

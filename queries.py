@@ -57,12 +57,12 @@ def get_booking_by_employee(id_emp, day):
 def add_booking(id_emp, id_room, day, id_start, id_end):
     with DBConnector() as connection:
         cursor = connection.cursor()
-        query = "INSERT INTO booking (id_emp, id_room, day, id_start, id_end) VALUES (" \
-                "{}, " \
-                "{}, " \
-                "'{}', " \
-                "{}, " \
-                "{})".format(id_emp, id_room, day, id_start, id_end)
+        query = f"INSERT INTO booking (id_emp, id_room, day, id_start, id_end) VALUES (" \
+                f"{id_emp}, " \
+                f"{id_room}, " \
+                f"'{day}', " \
+                f"{id_start}, " \
+                f"{id_end})"
         cursor.execute(query)
 
 

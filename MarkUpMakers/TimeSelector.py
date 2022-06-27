@@ -1,6 +1,8 @@
 import queries
 
 def time_selector_changer(data, selected, id_room, id_emp, day):
+    if selected != None:
+        selected = int(selected)
     data = room_booked_erase(data, selected, id_room, day)
     data = user_booked_erase(data, selected, id_emp, day)
 
@@ -8,7 +10,6 @@ def time_selector_changer(data, selected, id_room, id_emp, day):
         data = data[:-1]
     else:
         i = data[0][0]
-        selected = int(selected)
         while i != selected:
             data.pop(0)
             i = data[0][0]
