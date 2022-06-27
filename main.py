@@ -47,7 +47,7 @@ def inline_calendar_handler(update, context):
 def inline_room_handler(update, context):
     selected,room = telegramroom.process_room_selection(update, context)
     if selected:
-        NewBook.book["room"] = room
+        NewBook.book["room"] = int(room)
         context.bot.send_message(chat_id=update.callback_query.from_user.id,
                                  text=messages.room_response_message % room,
                                  reply_markup=telegramtimes.create_times(NewBook.book))
@@ -56,12 +56,12 @@ def inline_room_handler(update, context):
 def inline_times_handler(update, context):
     start,date = telegramtimes.process_times_selection(update, context)
     if start:
-        NewBook.book["start"] = date
+        NewBook.book["start"] = int(date)
         context.bot.send_message(chat_id=update.callback_query.from_user.id,
                                  text=messages.times_response_start_message % (date),
                                  reply_markup=telegramtimes.create_times(NewBook.book, date))
     else:
-        NewBook.book["end"] = date
+        NewBook.book["end"] = int(date)
         context.bot.send_message(chat_id=update.callback_query.from_user.id,
                                  text=messages.times_response_end_message % (date),
                                  reply_markup=EndAction.create_public())
