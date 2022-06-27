@@ -37,8 +37,8 @@ def get_booking_by_room(id_room, day):
     with DBConnector() as connection:
         cursor = connection.cursor()
         query = f"SELECT * FROM booking WHERE " \
-                f"id_room = {id_room}, " \
-                f"day = {day}"
+                f"id_room = {id_room} AND " \
+                f"day = '{day}'"
         cursor.execute(query)
         return cursor.fetchall()
 
@@ -47,8 +47,8 @@ def get_booking_by_employee(id_emp, day):
     with DBConnector() as connection:
         cursor = connection.cursor()
         query = f"SELECT * FROM booking WHERE " \
-                f"id_emp = {id_emp}, " \
-                f"day = {day}"
+                f"id_emp = {id_emp} AND " \
+                f"day = '{day}'"
         cursor.execute(query)
         return cursor.fetchall()
 
@@ -60,7 +60,7 @@ def add_booking(id_emp, id_room, day, id_start, id_end):
         query = "INSERT INTO booking (id_emp, id_room, day, id_start, id_end) VALUES (" \
                 "{}, " \
                 "{}, " \
-                "{}, " \
+                "'{}', " \
                 "{}, " \
                 "{})".format(id_emp, id_room, day, id_start, id_end)
         cursor.execute(query)
@@ -71,5 +71,5 @@ def add_unavailable(id_room, day):
         cursor = connection.cursor()
         query = "INSERT INTO booking (id_room, day) VALUES (" \
                 "{}, " \
-                "{})".format(id_room, day)
+                "'{}')".format(id_room, day)
         cursor.execute(query)

@@ -22,7 +22,7 @@ class TxtDataProcessor():
         print(f'Running TXT-file processor!\n', self.result)
 
 
-rooms_data = TxtDataProcessor("./DataBase/Rooms.json")
+rooms_data = TxtDataProcessor("Rooms.json")
 times_data = TxtDataProcessor("./DataBase/Times.json")
 
 def get_dataset(dataset):
