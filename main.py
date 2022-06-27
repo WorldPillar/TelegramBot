@@ -49,7 +49,7 @@ def inline_room_handler(update, context):
     if selected:
         context.bot.send_message(chat_id=update.callback_query.from_user.id,
                                  text=messages.room_response_message % room,
-                                 reply_markup=telegramtimes.create_times())
+                                 reply_markup=telegramtimes.create_times(NewBook.book))
         NewBook.book["room"] = room
 
 
@@ -58,11 +58,11 @@ def inline_times_handler(update, context):
     if start:
         context.bot.send_message(chat_id=update.callback_query.from_user.id,
                                  text=messages.times_response_start_message % (date.strftime("%H:%M")),
-                                 reply_markup=telegramtimes.create_times(date.strftime("%H:%M")))
+                                 reply_markup=telegramtimes.create_times(NewBook.book, date.strftime("%H:%M")))
         NewBook.book["start"] = date.strftime("%H:%M")
     else:
         context.bot.send_message(chat_id=update.callback_query.from_user.id,
-                                 text=messages.times_response_end_message % (date.strftime("%H:%M")),
+                                 text=messages.times_response_end_message % (NewBook.book, date.strftime("%H:%M")),
                                  reply_markup=EndAction.create_public())
         NewBook.book["end"] = date.strftime("%H:%M")
 

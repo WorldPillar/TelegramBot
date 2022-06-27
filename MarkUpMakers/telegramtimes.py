@@ -1,8 +1,8 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 import datetime
-from TelegramBot import messages
-from TelegramBot import utils
-from TelegramBot import queries
+import messages
+import utils
+import queries
 import numpy as np
 from DataBase import DBHandler
 from . import TimeSelector
@@ -13,11 +13,11 @@ def create_callback_data(action,hour,minute):
     return messages.TIMES_CALLBACK + ";" + ";".join([action, str(hour), str(minute)])
 
 
-def create_times(selected = None):
+def create_times(book, selected = None):
     keyboard = []
     #Проверка условия выбора начального времени и конечного
     times = queries.get_booking_time()
-    times = TimeSelector.time_selector_changer(times, selected)
+    times = TimeSelector.time_selector_changer(times, selected, book["room"], book["user_id"], book["day"])
     if selected == None:
         strSelect = "Start"
     else:
