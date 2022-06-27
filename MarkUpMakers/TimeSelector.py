@@ -1,4 +1,4 @@
-import queries
+from TelegramBot import queries
 
 def time_selector_changer(data, selected, id_room, day, id_emp):
     data = room_booked_erase(data, id_room, day)
