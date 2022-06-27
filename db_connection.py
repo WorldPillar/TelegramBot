@@ -1,25 +1,17 @@
 import psycopg2
-from psycopg2 import Error
 
 
 class DBConnector:
     def __init__(self):
-        connection = None
+        self.connection = None
 
-    def connect(self):
-        try:
-            connection = psycopg2.connect(user="admin",
-                                          password="admin",
-                                          host="127.0.0.1",
-                                          port="5432",
-                                          database="TelegramBot")
-            return connection
-        except (Exception, Error) as error:
-            print("Ошибка при работе с PostgreSQL", error)
-        finally:
-            if connection:
-                connection.close()
-                print("Соединение с PostgreSQL закрыто")
+    def __enter__(self):
+        self.connection = psycopg2.connect(host="localhost",
+                                      dbname="TelegramBot",
+                                      user="admin",
+                                      password="admin1524",
+                                      port="5432")
+        return self.connection
 
-    def disconnect(self):
+    def __exit__(self,*args,**kwargs):
         self.connection.close()
