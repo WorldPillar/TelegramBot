@@ -1,5 +1,6 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 import messages
+import queries
 import utils
 from DataBase import DBHandler
 
@@ -8,12 +9,14 @@ def create_callback_data(action,room):
     """ Create the callback data associated to each button"""
     return messages.ROOM_CALLBACK + ";" + ";".join([action, str(room)])
 
+
 def create_room():
     keyboard = []
     #Room Selection
-    rooms = DBHandler.get_dataset("rooms")
+    #rooms = DBHandler.get_dataset("rooms")
+    rooms = queries.get_rooms()
     for room in rooms:
-        button = [InlineKeyboardButton(room,callback_data=create_callback_data("ROOM",room))]
+        button = [InlineKeyboardButton(room[1],callback_data=create_callback_data("ROOM",room[0]))]
         keyboard.append(button)
 
     return InlineKeyboardMarkup(keyboard)

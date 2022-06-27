@@ -38,33 +38,33 @@ def inline_handler(update, context):
 def inline_calendar_handler(update, context):
     selected,date = telegramcalendar.process_calendar_selection(update, context)
     if selected:
+        NewBook.book["day"] = date.strftime("%d/%m/%Y")
         context.bot.send_message(chat_id=update.callback_query.from_user.id,
                                  text=messages.calendar_response_message % (date.strftime("%d/%m/%Y")),
                                  reply_markup=telegramroom.create_room())
-        NewBook.book["day"] = date.strftime("%d/%m/%Y")
 
 
 def inline_room_handler(update, context):
     selected,room = telegramroom.process_room_selection(update, context)
     if selected:
+        NewBook.book["room"] = room
         context.bot.send_message(chat_id=update.callback_query.from_user.id,
                                  text=messages.room_response_message % room,
                                  reply_markup=telegramtimes.create_times(NewBook.book))
-        NewBook.book["room"] = room
 
 
 def inline_times_handler(update, context):
     start,date = telegramtimes.process_times_selection(update, context)
     if start:
+        NewBook.book["start"] = date
         context.bot.send_message(chat_id=update.callback_query.from_user.id,
-                                 text=messages.times_response_start_message % (date.strftime("%H:%M")),
-                                 reply_markup=telegramtimes.create_times(NewBook.book, date.strftime("%H:%M")))
-        NewBook.book["start"] = date.strftime("%H:%M")
+                                 text=messages.times_response_start_message % (date),
+                                 reply_markup=telegramtimes.create_times(NewBook.book, date))
     else:
+        NewBook.book["end"] = date
         context.bot.send_message(chat_id=update.callback_query.from_user.id,
-                                 text=messages.times_response_end_message % (NewBook.book, date.strftime("%H:%M")),
+                                 text=messages.times_response_end_message % (date),
                                  reply_markup=EndAction.create_public())
-        NewBook.book["end"] = date.strftime("%H:%M")
 
 
 def inline_book_handler(update, context):

@@ -1,16 +1,17 @@
 import queries
 
 def time_selector_changer(data, selected, id_room, id_emp, day):
-    data = room_booked_erase(data, id_room, day)
-    data = user_booked_erase(data, id_emp, day)
+    data = room_booked_erase(data, selected, id_room, day)
+    data = user_booked_erase(data, selected, id_emp, day)
 
     if selected == None:
         data = data[:-1]
     else:
-        i = data[0]
+        i = data[0][0]
+        selected = int(selected)
         while i != selected:
             data.pop(0)
-            i = data[0]
+            i = data[0][0]
         data.pop(0)
 
     return data
