@@ -63,6 +63,11 @@ def add_unavailable_room(room, day):
     booking = queries.get_booking_by_room(room, day)
     times = queries.get_booking_time()
     for book in booking:
-        del times[book[4]-1:book[5]]
-    if len(times) == 0:
+        i = 0
+        for item in times:
+            if item[0] == book[4]:
+                del times[i:book[5] - book[4] + i + 1]
+                break
+            i += 1
+    if times == []:
         queries.add_unavailable(room, day)

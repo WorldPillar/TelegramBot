@@ -3,7 +3,7 @@ import messages
 import utils
 from DataBase import queries
 import numpy as np
-import timeselector
+from . import timeselector
 
 
 def create_callback_data(action, id_time, time):
@@ -15,7 +15,7 @@ def create_times(book, selected=None):
     keyboard = []
     # Проверка условия выбора начального времени и конечного
     times = queries.get_booking_time()
-    times = timeselector.time_selector_changer(times, selected, book["room"], book["user_id"], book["day"])
+    times = timeselector.time_selector_changer(times, selected, book["id_room"], book["id_emp"], book["day"])
     if times == []:
         keyboard = [
             [InlineKeyboardButton("Времени нет. Начать заново", callback_data=create_callback_data("Restart", 0, 0))]]
