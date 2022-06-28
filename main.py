@@ -1,17 +1,15 @@
-#import telegram
 from telegram.ext import Updater,CallbackQueryHandler,CommandHandler
-from telegram import  ReplyKeyboardRemove,ParseMode
+from telegram import ReplyKeyboardRemove,ParseMode
 
-import UpdateBook
+from booking import Book
+import bookedlist
 import utils
 import messages
-import create_booked_rooms
-import publication
 
-from MarkUpMakers import telegramtimes, telegramcalendar, telegramroom
+from MarkUpMakers import telegramtimes, telegramcalendar, telegramroom, publication
 
 TOKEN = "5374150038:AAFIsUjkkrZBFvHf59rU_96HJOwoLK5vJBM"
-NewBook = UpdateBook.Book()
+NewBook = Book()
 
 
 # Функция, обрабатывающая команду /start
@@ -47,7 +45,7 @@ def inline_calendar_handler(update, context):
 def inline_room_handler(update, context):
     selected,room,name = telegramroom.process_room_selection(update, context)
     if selected:
-        NewBook.book["room"] = int(room)
+        NewBook.book["id_room"] = int(room)
         context.bot.send_message(chat_id=update.callback_query.from_user.id,
                                  text=messages.room_response_message % name,
                                  reply_markup=telegramtimes.create_times(NewBook.book))
@@ -60,12 +58,12 @@ def inline_room_handler(update, context):
 def inline_times_handler(update, context):
     start,date,time = telegramtimes.process_times_selection(update, context)
     if start:
-        NewBook.book["start"] = int(date)
+        NewBook.book["id_start"] = int(date)
         context.bot.send_message(chat_id=update.callback_query.from_user.id,
                                  text=messages.times_response_start_message % time,
                                  reply_markup=telegramtimes.create_times(NewBook.book, date))
     elif start == False:
-        NewBook.book["end"] = int(date)
+        NewBook.book["id_end"] = int(date)
         context.bot.send_message(chat_id=update.callback_query.from_user.id,
                                  text=messages.times_response_end_message % time,
                                  reply_markup=publication.create_public())
@@ -81,7 +79,7 @@ def inline_book_handler(update, context):
         context.bot.send_message(chat_id=update.callback_query.from_user.id,
                                  text=f"Ваша запись зарегистрирована: {NewBook}",
                                  reply_markup=ReplyKeyboardRemove())
-        NewBook.saveBook()
+        NewBook.save()
         telegramroom.add_unavailable_room(NewBook.book["room"], NewBook.book["day"])
     else:
         context.bot.send_message(chat_id=update.callback_query.from_user.id,
@@ -89,20 +87,20 @@ def inline_book_handler(update, context):
                                  reply_markup=ReplyKeyboardRemove())
 
 
-def book_handler(update, context):
+def book_handler(update, _):
     NewBook.reload()
-    NewBook.book["user_id"] = update.message.chat_id
+    NewBook.book["id_emp"] = update.message.chat_id
     update.message.reply_text(text=messages.reservation_message,
                               reply_markup=telegramcalendar.create_calendar())
 
 
-def all_books_handler(update, context):
-    update.message.reply_text(text=create_booked_rooms.creat_booked_list(),
+def all_books_handler(update, _):
+    update.message.reply_text(text=bookedlist.creat_booked_list(),
                               reply_markup=ReplyKeyboardRemove())
 
 
-def user_books_handler(update, context):
-    update.message.reply_text(text=create_booked_rooms.creat_booked_list(update.message.chat_id),
+def user_books_handler(update, _):
+    update.message.reply_text(text=bookedlist.creat_booked_list(update.message.chat_id),
                               reply_markup=ReplyKeyboardRemove())
 
 
@@ -114,7 +112,7 @@ else:
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("book", book_handler))
     dp.add_handler(CommandHandler("allbooks", all_books_handler))
-    dp.add_handler(CommandHandler("userbooks", user_books_handler))
+    dp.add_handler(CommandHandler("mybooks", user_books_handler))
     dp.add_handler(CallbackQueryHandler(inline_handler))
 
     updater.start_polling()

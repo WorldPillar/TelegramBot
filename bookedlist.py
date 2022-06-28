@@ -1,8 +1,4 @@
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-import datetime
-import messages
-import utils
-import queries
+from DataBase import queries
 
 
 def creat_booked_list(chat_id = None):

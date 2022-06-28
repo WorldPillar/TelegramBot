@@ -1,6 +1,5 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 import messages
-import queries
 import utils
 
 def create_callback_data(action):
@@ -18,7 +17,6 @@ def create_public():
 def process_public_selection(update,context):
     ret_data = (None)
     query = update.callback_query
-    # print(query)
     (_,action) = utils.separate_callback_data(query.data)
     if action == "IGNORE":
         context.bot.answer_callback_query(callback_query_id= query.id)

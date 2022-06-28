@@ -1,8 +1,7 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 import messages
-import queries
+from DataBase import queries
 import utils
-from DataBase import DBHandler
 
 
 def create_callback_data(action,id_room,room):

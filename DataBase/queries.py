@@ -1,4 +1,4 @@
-from db_connection import DBConnector
+from DataBase.db_connection import DBConnector
 
 
 def get_rooms():
