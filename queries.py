@@ -9,10 +9,26 @@ def get_rooms():
         return cursor.fetchall()
 
 
-def get_unavailable():
+def get_employees():
     with DBConnector() as connection:
         cursor = connection.cursor()
-        query = "SELECT * FROM unavailable"
+        query = "SELECT * FROM employees"
+        cursor.execute(query)
+        return cursor.fetchall()
+
+
+def get_employees():
+    with DBConnector() as connection:
+        cursor = connection.cursor()
+        query = "SELECT * FROM employees"
+        cursor.execute(query)
+        return cursor.fetchall()
+
+
+def get_unavailable(day):
+    with DBConnector() as connection:
+        cursor = connection.cursor()
+        query = f"SELECT * FROM unavailable WHERE day = '{day}'"
         cursor.execute(query)
         return cursor.fetchall()
 
@@ -53,6 +69,17 @@ def get_booking_by_employee(id_emp, day):
         return cursor.fetchall()
 
 
+def get_booking_by_employee(id_emp, day):
+    with DBConnector() as connection:
+        cursor = connection.cursor()
+        cond = f" AND day = '{day}'"
+        if day == None:
+            cond = ''
+        query = f"SELECT * FROM booking WHERE " \
+                f"id_emp = {id_emp} " + cond
+        cursor.execute(query)
+        return cursor.fetchall()
+
 
 def add_booking(id_emp, id_room, day, id_start, id_end):
     with DBConnector() as connection:
@@ -69,7 +96,7 @@ def add_booking(id_emp, id_room, day, id_start, id_end):
 def add_unavailable(id_room, day):
     with DBConnector() as connection:
         cursor = connection.cursor()
-        query = "INSERT INTO booking (id_room, day) VALUES (" \
+        query = "INSERT INTO unavailable (id_room, day) VALUES (" \
                 "{}, " \
                 "'{}')".format(id_room, day)
         cursor.execute(query)

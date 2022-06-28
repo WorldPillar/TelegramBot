@@ -1,5 +1,6 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 import messages
+import queries
 import utils
 
 def create_callback_data(action):

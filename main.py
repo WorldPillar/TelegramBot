@@ -6,7 +6,7 @@ import UpdateBook
 import utils
 import messages
 import create_booked_rooms
-import EndAction
+import publication
 
 from MarkUpMakers import telegramtimes, telegramcalendar, telegramroom
 
@@ -41,39 +41,48 @@ def inline_calendar_handler(update, context):
         NewBook.book["day"] = date.strftime("%d/%m/%Y")
         context.bot.send_message(chat_id=update.callback_query.from_user.id,
                                  text=messages.calendar_response_message % (date.strftime("%d/%m/%Y")),
-                                 reply_markup=telegramroom.create_room())
+                                 reply_markup=telegramroom.create_room(date.strftime("%d/%m/%Y")))
 
 
 def inline_room_handler(update, context):
-    selected,room = telegramroom.process_room_selection(update, context)
+    selected,room,name = telegramroom.process_room_selection(update, context)
     if selected:
         NewBook.book["room"] = int(room)
         context.bot.send_message(chat_id=update.callback_query.from_user.id,
-                                 text=messages.room_response_message % room,
+                                 text=messages.room_response_message % name,
                                  reply_markup=telegramtimes.create_times(NewBook.book))
+    else:
+        context.bot.send_message(chat_id=update.callback_query.from_user.id,
+                                 text="",
+                                 reply_markup=ReplyKeyboardRemove())
 
 
 def inline_times_handler(update, context):
-    start,date = telegramtimes.process_times_selection(update, context)
+    start,date,time = telegramtimes.process_times_selection(update, context)
     if start:
         NewBook.book["start"] = int(date)
         context.bot.send_message(chat_id=update.callback_query.from_user.id,
-                                 text=messages.times_response_start_message % (date),
+                                 text=messages.times_response_start_message % time,
                                  reply_markup=telegramtimes.create_times(NewBook.book, date))
-    else:
+    elif start == False:
         NewBook.book["end"] = int(date)
         context.bot.send_message(chat_id=update.callback_query.from_user.id,
-                                 text=messages.times_response_end_message % (date),
-                                 reply_markup=EndAction.create_public())
+                                 text=messages.times_response_end_message % time,
+                                 reply_markup=publication.create_public())
+    else:
+        context.bot.send_message(chat_id=update.callback_query.from_user.id,
+                                 text="Выберите новую команду",
+                                 reply_markup=ReplyKeyboardRemove())
 
 
 def inline_book_handler(update, context):
-    publicate = EndAction.process_public_selection(update, context)
+    publicate = publication.process_public_selection(update, context)
     if publicate:
         context.bot.send_message(chat_id=update.callback_query.from_user.id,
                                  text=f"Ваша запись зарегистрирована: {NewBook}",
                                  reply_markup=ReplyKeyboardRemove())
         NewBook.saveBook()
+        telegramroom.add_unavailable_room(NewBook.book["room"], NewBook.book["day"])
     else:
         context.bot.send_message(chat_id=update.callback_query.from_user.id,
                                  text=f"Вы отменили запись",
