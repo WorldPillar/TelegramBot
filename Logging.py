@@ -1,10 +1,10 @@
 import os
+import json
 
 
-def logg(fn):
-    book = fn()
+def logg(book):
     if not os.path.exists("./Loggs"):
         os.makedirs("./Loggs")
     file = open('./Loggs/logg.txt', 'a+')
-    file.write(book + "\n")
+    file.write(json.dumps(book) + "\n")
     file.close()

@@ -80,7 +80,7 @@ def inline_book_handler(update, context):
                                  text=f"Ваша запись зарегистрирована: {NewBook}",
                                  reply_markup=ReplyKeyboardRemove())
         NewBook.save()
-        telegramroom.add_unavailable_room(NewBook.book["room"], NewBook.book["day"])
+        telegramroom.add_unavailable_room(NewBook.book["id_room"], NewBook.book["day"])
     else:
         context.bot.send_message(chat_id=update.callback_query.from_user.id,
                                  text=f"Вы отменили запись",
