@@ -21,13 +21,14 @@ def room_booked_erase(data, selected, id, day):
     booked_rooms = queries.get_booking_by_room(id, day)
     if selected == None:
         for book in booked_rooms:
-            del data[book[4]:book[5]]
+            del data[book[4]-1:book[5]-1]
     else:
         for book in booked_rooms:
             if book[4] < selected:
                 continue
             else:
-                del data[book[4]:-1]
+                del data[book[4]:]
+                break
     return data
 
 
@@ -35,11 +36,11 @@ def user_booked_erase(data, selected, id, day):
     booked_rooms = queries.get_booking_by_employee(id, day)
     if selected == None:
         for book in booked_rooms:
-            del data[book[4]:book[5]]
+            del data[book[4]-1:book[5]-1]
     else:
         for book in booked_rooms:
             if book[4] < selected:
                 continue
             else:
-                del data[book[4]:-1]
+                del data[book[4]:]
     return data
