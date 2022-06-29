@@ -8,7 +8,7 @@ import messages
 
 from MarkUpMakers import telegramtimes, telegramcalendar, telegramroom, publication
 
-TOKEN = "5374150038:AAFIsUjkkrZBFvHf59rU_96HJOwoLK5vJBM"
+TOKEN = "5374150038:AAFXm4LL2fbEdzJtMpobwRjnQfO10GiSoDc"
 NewBook = Book()
 
 
