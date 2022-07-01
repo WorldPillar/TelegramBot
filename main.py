@@ -1,5 +1,6 @@
 from telegram.ext import Updater,CallbackQueryHandler,CommandHandler
 from telegram import ReplyKeyboardRemove,ParseMode
+from decouple import config
 
 from booking import Book
 import bookedlist
@@ -8,7 +9,7 @@ import messages
 
 from MarkUpMakers import telegramtimes, telegramcalendar, telegramroom, publication
 
-TOKEN = "5374150038:AAFXm4LL2fbEdzJtMpobwRjnQfO10GiSoDc"
+TOKEN = config('TOKEN',default='')
 NewBook = Book()
 
 
