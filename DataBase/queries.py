@@ -28,7 +28,9 @@ def get_employees():
 def get_unavailable(day):
     with DBConnector() as connection:
         cursor = connection.cursor()
-        query = f"SELECT * FROM unavailable WHERE day = '{day}'"
+        query = f"SELECT * FROM booking_count " \
+                f"WHERE day = '{day}' AND " \
+                f"status = false"
         cursor.execute(query)
         return cursor.fetchall()
 
@@ -90,13 +92,4 @@ def add_booking(id_emp, id_room, day, id_start, id_end):
                 f"'{day}', " \
                 f"{id_start}, " \
                 f"{id_end})"
-        cursor.execute(query)
-
-
-def add_unavailable(id_room, day):
-    with DBConnector() as connection:
-        cursor = connection.cursor()
-        query = "INSERT INTO unavailable (id_room, day) VALUES (" \
-                "{}, " \
-                "'{}')".format(id_room, day)
         cursor.execute(query)

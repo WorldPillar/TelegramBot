@@ -59,12 +59,10 @@ def process_room_selection(update,context):
     return ret_data
 
 
-def add_unavailable_room(room, day):
-    booking = queries.get_booking_by_room(room, day)
-    book_list = set([])
-    for book in booking:
-        book_list.add(book[4])
-        book_list.add(book[5])
-    if (1 in book_list) and (37 in book_list):
-        if len(book_list) == (len(booking) + 1):
-            queries.add_unavailable(room, day)
+# def add_unavailable_room(room, day):
+#     booking = queries.get_booking_by_room(room, day)
+#     count = 0
+#     for book in booking:
+#         count += book[5] - book[4]
+#     if count == 36:
+#         queries.add_unavailable(room, day)

@@ -8,8 +8,8 @@ class DBConnector:
     def __enter__(self):
         self.connection = psycopg2.connect(host="localhost",
                                       dbname="TelegramBot",
-                                      user="admin",
-                                      password="admin1524",
+                                      user="postgres",
+                                      password="admin",
                                       port="5432")
         return self.connection
 
