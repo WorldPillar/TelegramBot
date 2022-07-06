@@ -1,3 +1,7 @@
+"""
+Подключение к базе данных
+"""
+
 import psycopg2
 
 
@@ -7,12 +11,12 @@ class DBConnector:
 
     def __enter__(self):
         self.connection = psycopg2.connect(host="localhost",
-                                      dbname="TelegramBot",
+                                      dbname="telebot",
                                       user="postgres",
                                       password="admin",
                                       port="5432")
         return self.connection
 
-    def __exit__(self,*args,**kwargs):
+    def __exit__(self, *args, **kwargs):
         self.connection.commit()
         self.connection.close()

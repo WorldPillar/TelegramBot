@@ -17,18 +17,10 @@ def get_employees():
         return cursor.fetchall()
 
 
-def get_employees():
-    with DBConnector() as connection:
-        cursor = connection.cursor()
-        query = "SELECT * FROM employees"
-        cursor.execute(query)
-        return cursor.fetchall()
-
-
 def get_unavailable(day):
     with DBConnector() as connection:
         cursor = connection.cursor()
-        query = f"SELECT * FROM booking_count " \
+        query = f"SELECT * FROM room_availability " \
                 f"WHERE day = '{day}' AND " \
                 f"status = false"
         cursor.execute(query)
@@ -64,18 +56,8 @@ def get_booking_by_room(id_room, day):
 def get_booking_by_employee(id_emp, day):
     with DBConnector() as connection:
         cursor = connection.cursor()
-        query = f"SELECT * FROM booking WHERE " \
-                f"id_emp = {id_emp} AND " \
-                f"day = '{day}'"
-        cursor.execute(query)
-        return cursor.fetchall()
-
-
-def get_booking_by_employee(id_emp, day):
-    with DBConnector() as connection:
-        cursor = connection.cursor()
         cond = f" AND day = '{day}'"
-        if day == None:
+        if day is None:
             cond = ''
         query = f"SELECT * FROM booking WHERE " \
                 f"id_emp = {id_emp} " + cond

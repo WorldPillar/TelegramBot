@@ -7,13 +7,6 @@ class Book:
     def __init__(self):
         self.book = {"id_emp": None, "id_room": None, "day": None, "id_start": None, "id_end": None}
 
-    def __enter__(self):
-        self.book = {"id_emp": None, "id_room": None, "day": None, "id_start": None, "id_end": None}
-        return self.book
-
-    def __exit__(self, *args, **kwargs):
-        del self.book
-
     def reload(self):
         self.book = {"id_emp": None,"id_room": None,"day": None,"id_start": None,"id_end": None}
 

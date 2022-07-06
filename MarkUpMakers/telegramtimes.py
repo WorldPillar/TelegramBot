@@ -2,7 +2,6 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 import messages
 import utils
 from DataBase import queries
-import numpy as np
 from . import timeselector
 
 
@@ -16,28 +15,28 @@ def create_times(book, selected=None):
     # Проверка условия выбора начального времени и конечного
     times = queries.get_booking_time()
     times = timeselector.time_selector_changer(times, selected, book["id_room"], book["id_emp"], book["day"])
-    if times == []:
+    if not times:
         keyboard = [
             [InlineKeyboardButton("Времени нет. Начать заново", callback_data=create_callback_data("Restart", 0, 0))]]
     else:
-        if selected == None:
+        if selected is None:
             strselect = "Start"
         else:
             strselect = "End"
         # Times selection
-        rowcount = 0
-        for j in range(int(np.ceil(len(times) / 4))):
-            row = []
-            for i in range(4):
-                pos = i + rowcount * 4
-                if pos >= len(times):
-                    row.append(
-                        InlineKeyboardButton(" ", callback_data=create_callback_data("IGNORE", 0, 0)))
-                else:
-                    date = times[pos][1].strftime("%H:%M")
-                    row.append(InlineKeyboardButton(date, callback_data=create_callback_data(strselect, times[pos][0],
-                                                                                             times[pos][1])))
-            rowcount = rowcount + 1
+        columns = 0
+        rows = []
+        for time in times:
+            if columns % 4 == 0:
+                rows.append([])
+            date = time[1].strftime("%H:%M")
+            rows[columns // 4].append(InlineKeyboardButton
+                                      (date, callback_data=create_callback_data(strselect, time[0], time[1])))
+            columns += 1
+        for i in range((4 - (columns % 4)) % 4):
+            rows[columns // 4].append(InlineKeyboardButton
+                                      (" ", callback_data=create_callback_data("IGNORE", 0, 0)))
+        for row in rows:
             keyboard.append(row)
 
     return InlineKeyboardMarkup(keyboard)
