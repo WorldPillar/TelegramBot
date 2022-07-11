@@ -12,7 +12,11 @@ def creat_booked_list(chat_id = None):
     strbooks = ""
     times = dict(queries.get_booking_time())
     rooms = dict(queries.get_rooms())
-    employees = dict(queries.get_employees())
+    dirty_emp = queries.get_employees()
+    employees = []
+    for emp in dirty_emp:
+        employees.append((emp[1], emp[4]))
+    employees = dict(employees)
     for book in books:
         employ = f"{employees[book[1]]}"
         room = f"{rooms[book[2]]}"

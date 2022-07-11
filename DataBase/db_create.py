@@ -182,7 +182,7 @@ class DBCreator:
         """
         in_hour = 60 // interval
         cursor = self.connection.cursor()
-        for i in range(9 * in_hour):
+        for i in range(9 * in_hour + 1):
             date = datetime.time(int(i//in_hour + 9), int(i % in_hour*interval), int(0)).strftime("%H:%M:%S")
             query = "INSERT INTO booking_time(_time) VALUES ("f"'{date}'"");"
             cursor.execute(query)
