@@ -129,9 +129,9 @@ class DBCreator:
                                     WHERE id_room = NEW.id_room AND 
                                     day = NEW.day AND 
                                     ((id_start <= NEW.id_start AND 
-                                    id_end >= NEW.id_start) OR 
+                                    id_end > NEW.id_start) OR 
                                     (id_end >= NEW.id_end AND 
-                                    id_start <= NEW.id_end))
+                                    id_start < NEW.id_end))
                                 ) > 0 THEN
                                 raise exception 'This interval (% - %) already taken', NEW.id_start, NEW.id_end;
                             END IF;
